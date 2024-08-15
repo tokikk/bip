@@ -2,12 +2,15 @@ import os
 from azure.ai.vision.imageanalysis import ImageAnalysisClient
 from azure.ai.vision.imageanalysis.models import VisualFeatures
 from azure.core.credentials import AzureKeyCredential
-from . import infomation
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 # **** parameter ******************************************
-API_KEY = infomation.key
-ENDPOINT_URI = infomation.endpoint
-IMAGE_PATH = "559_3about:blank#blocked_818_544.jpg"
+API_KEY = config['DEFAULT']['API_KEY']
+ENDPOINT_URI = config['DEFAULT']['ENDPOINT_URI']
+IMAGE_PATH = "../img/img_34.jpg"
 VISUAL_FEATURES = [VisualFeatures.OBJECTS]
 # *********************************************************
 
@@ -22,7 +25,8 @@ def getAnalysingResult():
     result = client.analyze(
         open(IMAGE_PATH, "rb"),
         visual_features=VISUAL_FEATURES,
-        gender_neutral_caption=True,     )
+        gender_neutral_caption=True,
+        language="ja")
     return result
 
 def showResult(result):
@@ -36,12 +40,14 @@ def showResult(result):
             for word in line.words:
                 print(f"     Word: '{word.text}', Bounding polygon {word.bounding_polygon}, Confidence {word.confidence:.4f}")
     elif VisualFeatures.CAPTION in VISUAL_FEATURES:
-
+        print(f"   '{result.caption.text}', Confidence {result.caption.confidence:.4f}")
     elif VisualFeatures.PEOPLE in VISUAL_FEATURES:
-
+        for person in result.people.list:
+            print(f"   {person.bounding_box}, Confidence {person.confidence:.4f}")
     elif VisualFeatures.TAGS in VISUAL_FEATURES:
+        for tag in result.tags.list:
+            print(f"   '{tag.name}', Confidence {tag.confidence:.4f}")
 
-   
 if __name__=='__main__':
     client = getAnalysisClient()
     result = getAnalysingResult()
