@@ -17,10 +17,18 @@ with io.open(IMAGE_PATH, 'rb') as image_file:
     content = image_file.read()  
     image = vision.Image(content=content)
 
-    response =  client.object_localization(image=image).localized_object_annotations
-    print(f"Number of objects found: {len(response)}")
-    for object in response:
-        print(f"\n{object.name} (confidence: {object.score})")
-        print("Normalized bounding polygon vertices: ")
-        for vertex in object.bounding_poly.normalized_vertices:
-            print(f" - ({vertex.x}, {vertex.y})")
+    mode = input("1:Object Detection 2:Label Detection >> ")
+    if mode == "1":
+        response =  client.object_localization(image=image).localized_object_annotations
+        print(f"Number of objects found: {len(response)}")
+        for object in response:
+            print(f"\n{object.name} (confidence: {object.score})")
+            print("Normalized bounding polygon vertices: ")
+            for vertex in object.bounding_poly.normalized_vertices:
+                print(f" - ({vertex.x}, {vertex.y})")
+    elif mode == "2":
+        response = client.label_detection(image=image)
+        labels = response.label_annotations
+
+        for label in labels:
+            print(label.description)
