@@ -8,9 +8,9 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # **** parameter ******************************************
-API_KEY = config['DEFAULT']['API_KEY']
-ENDPOINT_URI = config['DEFAULT']['ENDPOINT_URI']
-IMAGE_PATH = "../img/img_34.jpg"
+API_KEY = config['AZURE']['API_KEY']
+ENDPOINT_URI = config['AZURE']['ENDPOINT_URI']
+IMAGE_PATH = "../img/00.jpg"
 VISUAL_FEATURES = [VisualFeatures.OBJECTS]
 # *********************************************************
 

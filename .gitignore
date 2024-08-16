@@ -1,3 +1,4 @@
 .venv
 img/
 src/config.ini
+cred/
